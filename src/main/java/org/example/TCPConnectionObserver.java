@@ -1,7 +1,5 @@
 package org.example;
 
-import java.net.SocketException;
-
 public interface TCPConnectionObserver {
     // соединение запущено и готово к работе
     void connectionReady(TCPConnection tcpConnection);

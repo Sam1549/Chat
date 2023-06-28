@@ -68,3 +68,11 @@
 [15:02:09 2023] sam: мда
 [15:02:38 2023] Client disconnect: TCPConnection: /192.168.31.203: 45321
 [15:04:03 2023] Client connected: TCPConnection: /192.168.31.203: 46369
+[15:24:57 2023] Client connected: TCPConnection: /192.168.31.109: 54862
+[15:25:14 2023] Sam: Hi, evryone 
+[15:25:21 2023] Client connected: TCPConnection: /192.168.31.109: 54876
+[15:25:33 2023] Uncle: Hi
+[15:26:02 2023] Uncle: ppp
+[15:26:12 2023] Sam: sss
+[15:26:18 2023] Client disconnect: TCPConnection: /192.168.31.109: 54876
+[15:26:24 2023] Client disconnect: TCPConnection: /192.168.31.109: 54862

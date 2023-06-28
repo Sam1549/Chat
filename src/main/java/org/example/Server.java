@@ -13,10 +13,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class Server implements TCPConnectionObserver {
-    private Socket clientSocket;
-    private Logger logger = Logger.getInstance();
-    private ArrayList<TCPConnection> connections = new ArrayList<>();
-    private static DateTimeFormatter time = DateTimeFormatter.ofPattern("[HH:mm:ss YYYY]");
+    private final Logger logger = Logger.getInstance();
+    private final ArrayList<TCPConnection> connections = new ArrayList<>();
+    private static final DateTimeFormatter time = DateTimeFormatter.ofPattern("[HH:mm:ss yyyy]");
     private int port = getPort();
 
 
@@ -30,7 +29,7 @@ public class Server implements TCPConnectionObserver {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
                 try {
-                    clientSocket = serverSocket.accept();
+                    Socket clientSocket = serverSocket.accept();
                     new TCPConnection(this, clientSocket);
                 } catch (SocketException e) {
                     System.out.println("TCPConnection exception s1: " + e);
@@ -77,13 +76,12 @@ public class Server implements TCPConnectionObserver {
     }
 
     private void sendToAllConnections(String text) {
-        if (!text.isEmpty() && text != null) {
+        if (!text.isEmpty()) {
             logger.log("[" + time.format(LocalDateTime.now()) + "] " + text);
             System.out.println("[" + time.format(LocalDateTime.now()) + "] " + text);
 
-            int cnt = connections.size();
-            for (int i = 0; i < cnt; i++) {
-                connections.get(i).sendMsg("[" + time.format(LocalDateTime.now()) + "] " + text);
+            for (TCPConnection connection : connections) {
+                connection.sendMsg("[" + time.format(LocalDateTime.now()) + "] " + text);
             }
         }
     }

@@ -32,7 +32,7 @@ public class TCPConnection {
                     while (!rThread.isInterrupted()) {
                         observer.receiveString(TCPConnection.this, in.readLine());
                     }
-                } catch (NullPointerException n) {
+                } catch (NullPointerException ignored) {
 
                 } catch (Exception e) {
                     observer.tcpException(TCPConnection.this, e);

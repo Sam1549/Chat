@@ -8,8 +8,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class Client implements TCPConnectionObserver {
-    private static String exit = "/exit";
-    private Socket socket = getSocket();
+    private static final String exit = "/exit";
     private TCPConnection connection;
 
     private Scanner scanner;
@@ -31,6 +30,8 @@ public class Client implements TCPConnectionObserver {
     private Client() {
         try {
             scanner = new Scanner(System.in);
+            Socket socket = getSocket();
+            assert socket != null;
             connection = new TCPConnection(this, socket);
         } catch (IOException e) {
             printMsg("Connection exception: c1 " + e);
@@ -69,15 +70,14 @@ public class Client implements TCPConnectionObserver {
     }
 
     private synchronized static void printMsg(String msg) {
-        if (!msg.isEmpty() && msg != null) System.out.println(msg);
+        if (!msg.isEmpty()) System.out.println(msg);
     }
 
     private Socket getSocket() {
         try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of("./property.txt"))) {
             Properties properties = new Properties();
             properties.load(bufferedReader);
-            Socket socket1 = new Socket(properties.getProperty("host"), Integer.parseInt(properties.getProperty("port")));
-            return socket1;
+            return new Socket(properties.getProperty("host"), Integer.parseInt(properties.getProperty("port")));
         } catch (IOException e) {
             e.printStackTrace();
             return null;
