@@ -1,12 +1,8 @@
 package org.example;
 
-import javax.imageio.IIOException;
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
 
 public class TCPConnection {
     private final Socket socket;
@@ -14,6 +10,8 @@ public class TCPConnection {
     private final TCPConnectionObserver observer;
     private final BufferedReader in;
     private final BufferedWriter out;
+
+    private String name;
 
 
     public TCPConnection(TCPConnectionObserver tcpConnectionObserver, String ipAddress, String port) throws IOException {
@@ -30,6 +28,7 @@ public class TCPConnection {
             public void run() {
                 try {
                     observer.connectionReady(TCPConnection.this);
+                    observer.tcpSetName(TCPConnection.this, in.readLine());
                     while (!rThread.isInterrupted()) {
                         observer.receiveString(TCPConnection.this, in.readLine());
                     }
@@ -48,9 +47,6 @@ public class TCPConnection {
 
     public synchronized void sendMsg(String message) {
         try {
-//            if (message.equalsIgnoreCase("/exit")) {
-//                disconnect();
-//            } else if
             if (!message.isEmpty()) {
                 out.write(message + "\r\n");
                 out.flush();
@@ -73,5 +69,13 @@ public class TCPConnection {
     @Override
     public String toString() {
         return "TCPConnection: " + socket.getInetAddress() + ": " + socket.getPort();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

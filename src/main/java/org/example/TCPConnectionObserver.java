@@ -15,5 +15,9 @@ public interface TCPConnectionObserver {
     // исключения
     void tcpException(TCPConnection tcpConnection, Exception e);
 
+    // Присвоить ник
+    void tcpSetName(TCPConnection tcpConnection, String name);
+
 
 }
+

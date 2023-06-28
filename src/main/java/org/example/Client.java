@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 public class Client implements TCPConnectionObserver {
     private static String exit = "/exit";
-    private final String IP_ADDRESS = "192.168.31.109";
-    private final String PORT = "8189";
     private Socket socket = getSocket();
     private TCPConnection connection;
 
@@ -63,6 +61,11 @@ public class Client implements TCPConnectionObserver {
     @Override
     public void tcpException(TCPConnection tcpConnection, Exception e) {
         printMsg("Connection exception: c2" + e);
+    }
+
+    @Override
+    public void tcpSetName(TCPConnection tcpConnection, String name) {
+        tcpConnection.setName(name);
     }
 
     private synchronized static void printMsg(String msg) {

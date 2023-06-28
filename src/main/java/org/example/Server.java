@@ -45,7 +45,7 @@ public class Server implements TCPConnectionObserver {
     public synchronized void connectionReady(TCPConnection tcpConnection) {
         connections.add(tcpConnection);
         sendToAllConnections("Client connected: " + tcpConnection); // toString
-//        tcpConnection.sendMsg("введи ник");
+        tcpConnection.sendMsg("Здравствуйте, введите, пожалуйста, ваш никнейм!");
     }
 
     @Override
@@ -53,8 +53,7 @@ public class Server implements TCPConnectionObserver {
         if (value.equals("/exit")) {
             tcpConnection.disconnect();
         } else {
-//            logger.log("["+ time.format(LocalDateTime.now()) +"] " + value);
-            sendToAllConnections(value);
+            sendToAllConnections(tcpConnection.getName() + ": " + value);
         }
     }
 
@@ -69,6 +68,12 @@ public class Server implements TCPConnectionObserver {
     public synchronized void tcpException(TCPConnection tcpConnection, Exception e) {
         System.out.println("TCPConnection exception s2 " + e);
 //        tcpConnection.disconnect();
+    }
+
+    @Override
+    public void tcpSetName(TCPConnection tcpConnection, String name) {
+        tcpConnection.setName(name);
+        tcpConnection.sendMsg("Ваш ник: " + name);
     }
 
     private void sendToAllConnections(String text) {
