@@ -61,7 +61,7 @@ public class TCPConnection {
         rThread.interrupt();
         try {
             this.socket.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             observer.tcpException(TCPConnection.this, e);
         }
     }

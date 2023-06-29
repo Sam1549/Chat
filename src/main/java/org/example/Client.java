@@ -7,24 +7,16 @@ import java.nio.file.Path;
 import java.util.Properties;
 import java.util.Scanner;
 
-public class Client implements TCPConnectionObserver {
+public class Client implements TCPConnectionObserver, Runnable {
     private static final String exit = "/exit";
     private TCPConnection connection;
 
     private Scanner scanner;
+    private Thread thread;
 
 
     public static void main(String[] args) {
-        Client client = new Client();
-        while (true) {
-            String text = client.scanner.nextLine();
-            if (text.equalsIgnoreCase(exit)) {
-                client.connection.disconnect();
-                break;
-            } else {
-                client.connection.sendMsg(text);
-            }
-        }
+        new Client();
     }
 
     private Client() {
@@ -33,6 +25,8 @@ public class Client implements TCPConnectionObserver {
             Socket socket = getSocket();
             assert socket != null;
             connection = new TCPConnection(this, socket);
+            thread = new Thread(this);
+            thread.start();
         } catch (IOException e) {
             printMsg("Connection exception: c1 " + e);
         }
@@ -46,7 +40,7 @@ public class Client implements TCPConnectionObserver {
     @Override
     public void receiveString(TCPConnection tcpConnection, String value) {
         if (value.equals(exit)) {
-            tcpConnection.disconnect();
+//            tcpConnection.disconnect();
         } else {
             printMsg(value);
         }
@@ -56,6 +50,8 @@ public class Client implements TCPConnectionObserver {
     public void tcpDisconnect(TCPConnection tcpConnection) {
         printMsg("Connection close");
         tcpConnection.disconnect();
+        thread.interrupt();
+
 
     }
 
@@ -81,6 +77,19 @@ public class Client implements TCPConnectionObserver {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void run() {
+        while (!thread.isInterrupted()) {
+            String text = this.scanner.nextLine();
+            if (text.equalsIgnoreCase(exit)) {
+                this.connection.disconnect();
+                thread.interrupt();
+            } else {
+                this.connection.sendMsg(text);
+            }
         }
     }
 }
